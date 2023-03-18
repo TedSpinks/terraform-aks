@@ -1,16 +1,21 @@
-resource "azurerm_kubernetes_cluster" "k8s" {
+resource "azurerm_kubernetes_cluster" "this" {
   location            = var.location
   name                = var.cluster_name
-  resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = var.dns_prefix
-  tags = var.tags
+  resource_group_name = azurerm_resource_group.this.name
+  dns_prefix          = local.dns_prefix
+  tags                = var.tags
 
+  # Dedicated System Node Pool (aka control plane nodes)
   default_node_pool {
-    name       = "agentpool"
-    vm_size    = "Standard_D2_v2"
-    node_count = var.agent_count
+    name       = "systempool"
+    vm_size    = var.system_node_pool_vm_size
+    node_count = var.system_node_pool_count
+    tags       = var.tags
+    # Taint the system nodes with CriticalAddonsOnly=true:NoSchedule
+    # See https://learn.microsoft.com/en-us/azure/aks/use-system-pools?tabs=azure-cli#system-and-user-node-pools
+    only_critical_addons_enabled = true
   }
-  
+
   linux_profile {
     admin_username = "ubuntu"
 
@@ -18,18 +23,28 @@ resource "azurerm_kubernetes_cluster" "k8s" {
       key_data = var.ssh_public_key
     }
   }
+
   network_profile {
-    network_plugin    = "kubenet"
-    load_balancer_sku = "standard"
+    network_plugin = var.network_plugin
+    # Azure CNI gets Azure Network Policy Manager; Kubenet gets Calico
+    network_policy = var.network_plugin == "azure" ? "azure" : "calico"
   }
 
   identity {
     type = "SystemAssigned"
   }
 
-  # This block ties the cluster to the Log Analytics Workspace
-  # https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-enable-aks?tabs=terraform
+  # Enable Container Insights
   oms_agent {
-    log_analytics_workspace_id = "${azurerm_log_analytics_workspace.test.id}"
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
   }
+}
+
+# User Node Pool (aka worker nodes)
+resource "azurerm_kubernetes_cluster_node_pool" "user" {
+  name                  = "userpool"
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
+  vm_size               = var.user_node_pool_vm_size
+  node_count            = var.user_node_pool_count
+  tags                  = var.tags
 }

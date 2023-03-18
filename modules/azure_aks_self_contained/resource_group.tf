@@ -1,5 +1,5 @@
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "this" {
   location = var.location
-  name     = local.resource_group_main_name
-  tags = var.tags
+  name     = local.main_resource_group_name
+  tags     = var.tags
 }

@@ -1,9 +1,20 @@
-module "azure_aks_self_contained" {
-  source              = "./modules/azure_aks_self_contained"
-  cluster_name        = "ted-test-aks-1"
-  dns_prefix          = "ted-test-aks-1"
-  resource_group_main_name_override = "ted-test-aks-1"
-  location            = var.location
-  ssh_public_key      = var.ssh_public_key
-  tags                = local.common_tags
+module "azure_aks_self_contained_test1" {
+  source               = "./modules/azure_aks_self_contained"
+  cluster_name         = "ted-test-aks-1"
+  location             = "westus2"
+  ssh_public_key       = var.ssh_public_key
+  user_node_pool_count = 1
+  network_plugin       = "kubenet"
+  tags                 = var.tags
+}
+
+module "azure_aks_self_contained_test2" {
+  source                   = "./modules/azure_aks_self_contained"
+  cluster_name             = "ted-test-aks-2"
+  location                 = "westus2"
+  ssh_public_key           = var.ssh_public_key
+  user_node_pool_count     = 1
+  system_node_pool_vm_size = "Standard_D2_v3"
+  user_node_pool_vm_size   = "Standard_D2_v3"
+  tags                     = var.tags
 }
