@@ -52,6 +52,12 @@ variable "network_plugin" {
   default     = "azure"
 }
 
+variable "sku_tier" {
+  type        = string
+  description = "AKS SKU: Free, Paid, or Standard. Free = no SLAs."
+  default     = "Standard"
+}
+
 variable "main_resource_group_name_override" {
   type        = string
   description = "Optional. Override the default resource group name for the AKS and monitoring resources. Uses cluster_name by default."

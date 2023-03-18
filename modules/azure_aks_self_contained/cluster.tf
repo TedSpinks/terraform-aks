@@ -4,6 +4,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   resource_group_name = azurerm_resource_group.this.name
   dns_prefix          = local.dns_prefix
   tags                = var.tags
+  sku_tier            = var.sku_tier
 
   # Dedicated System Node Pool (aka control plane nodes)
   default_node_pool {

@@ -6,6 +6,7 @@ module "azure_aks_self_contained_test1" {
   user_node_pool_count = 1
   network_plugin       = "kubenet"
   tags                 = var.tags
+  sku_tier             = "Free"
 }
 
 module "azure_aks_self_contained_test2" {
@@ -17,4 +18,5 @@ module "azure_aks_self_contained_test2" {
   system_node_pool_vm_size = "Standard_D2_v3"
   user_node_pool_vm_size   = "Standard_D2_v3"
   tags                     = var.tags
+  sku_tier                 = "Free"
 }
