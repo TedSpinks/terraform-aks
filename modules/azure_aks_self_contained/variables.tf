@@ -10,13 +10,34 @@ variable "location" {
   description = "Region where the AKS resources will reside"
 }
 
+variable "zones" {
+  type        = list(number)
+  description = "The Availability Zones where the AKS resources will reside"
+  default     = [1, 2, 3]
+}
+
 variable "tags" {
   type        = map(string)
-  description = "Any tags that should added to the AKS resources"
+  description = "Tags that should added to the AKS resources"
 }
 
 
-# ------------------------------------ Node Pools -------------------------------------
+# ---------------------------------------- RBAC -----------------------------------------
+
+variable "azure_rbac_admin_group_object_ids" {
+  type        = list(string)
+  description = "(Optional) A list of AAD Group Object IDs that should have Admin access to the Cluster"
+  default     = []
+}
+
+variable "azure_rbac_reader_group_object_ids" {
+  type        = list(string)
+  description = "(Optional) A list of AAD Group Object IDs that should have Read-Only access to the Cluster"
+  default     = []
+}
+
+
+# ------------------------------------- Node Pools --------------------------------------
 
 variable "ssh_public_key" {
   description = "SSH public key to inject into all K8s nodes"
@@ -44,7 +65,7 @@ variable "user_node_pool_vm_size" {
 }
 
 
-# ------------------------------- Misc Optional Settings ------------------------------
+# -------------------------------- Misc Optional Settings -------------------------------
 
 variable "network_plugin" {
   type        = string
@@ -60,12 +81,12 @@ variable "sku_tier" {
 
 variable "main_resource_group_name_override" {
   type        = string
-  description = "Optional. Override the default resource group name for the AKS and monitoring resources. Uses cluster_name by default."
+  description = "(Optional) Override the default resource group name for the AKS and monitoring resources. Uses cluster_name by default."
   default     = ""
 }
 
 variable "dns_prefix_override" {
-  description = "Optional. Override the default DNS prefix for the K8s API FQDN. Uses cluster_name by default."
+  description = "(Optional) Override the default DNS prefix for the K8s API FQDN. Uses cluster_name by default."
   default     = ""
   # Basic validation to prevent errors during apply
   validation {

@@ -6,11 +6,19 @@ resource "azurerm_kubernetes_cluster" "this" {
   tags                = var.tags
   sku_tier            = var.sku_tier
 
+  # Enable managed Azure AD integration and Azure RBAC for Kubernetes Authorization
+  azure_active_directory_role_based_access_control {
+    managed                = true
+    azure_rbac_enabled     = true
+    admin_group_object_ids = var.azure_rbac_admin_group_object_ids
+  }
+
   # Dedicated System Node Pool (aka control plane nodes)
   default_node_pool {
     name       = "systempool"
     vm_size    = var.system_node_pool_vm_size
     node_count = var.system_node_pool_count
+    zones      = var.zones
     tags       = var.tags
     # Taint the system nodes with CriticalAddonsOnly=true:NoSchedule
     # See https://learn.microsoft.com/en-us/azure/aks/use-system-pools?tabs=azure-cli#system-and-user-node-pools
@@ -47,5 +55,6 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
   vm_size               = var.user_node_pool_vm_size
   node_count            = var.user_node_pool_count
+  zones                 = var.zones
   tags                  = var.tags
 }
