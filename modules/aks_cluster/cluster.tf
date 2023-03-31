@@ -6,6 +6,11 @@ resource "azurerm_kubernetes_cluster" "this" {
   tags                = var.tags
   sku_tier            = var.sku_tier
 
+  # Control Plane's Managed Identity
+  # Use SystemAssigned id when possible, because AKS will give it all the needed permissions. 
+  # We need UserAssigned id when using Kubenet with BYO VNet/Subnet, so we can pre-create the
+  # permissions it needs to update its Route Table.
+  # https://learn.microsoft.com/en-us/azure/aks/use-managed-identity
   identity {
     type = "SystemAssigned"
   }
@@ -17,11 +22,13 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   # Enable Application Gateway Ingress Controller (AGIC)
-  # Microsoft recommends a /24 subnet for AGIC. The default AKS VNet is 10.224.0.0/12, and its default 
-  # node pool subnet is 10.224.0.0/16, so the next available /24 subnet after 10.224.0.0/16 but still 
-  # within 10.224.0.0/12 is 10.225.0.0/24.
-  ingress_application_gateway {
-    subnet_cidr = "10.225.0.0/24"
+  # Set var.app_gateway_enable_list to [] if you need to disable AGIC (it's not compatible with Azure CNI Overlay)
+  dynamic "ingress_application_gateway" {
+    for_each = local.enable_app_gateway_dynamic_block
+    content {
+      subnet_cidr = var.app_gateway_cidr
+      gateway_id  = var.app_gateway_id
+    }
   }
 
   # Enable managed Azure AD integration and Azure RBAC for Kubernetes Authorization

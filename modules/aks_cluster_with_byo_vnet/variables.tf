@@ -22,6 +22,77 @@ variable "tags" {
 }
 
 
+# --------------------------------------- Network ---------------------------------------
+
+variable "vnet_name" {
+  type        = string
+  description = "Name of the Virtual Network in which to create the AKS cluster's node pools"
+}
+
+variable "vnet_id" {
+  type        = string
+  description = "ID of the Virtual Network in which to create the AKS cluster's node pools"
+}
+
+variable "vnet_resource_group_name" {
+  type        = string
+  description = "The Resource Group in which the Virtual Network lives"
+}
+
+variable "vnet_resource_group_id" {
+  type        = string
+  description = "The ID of the Resource Group in which the Virtual Network lives"
+}
+
+variable "aks_nodes_subnet_address_prefixes" {
+  type        = list(string)
+  description = "List of address range CIDRs for subnet where this AKS cluster's nodes will live. Example: [\"10.89.0.0/24\"]"
+}
+
+variable "network_plugin" {
+  type        = string
+  description = "Which K8s network plugin to use: kubenet, azure, or azureoverlay. Cillium is coming soon. For Kubenet, managed_identity_ids is also required."
+  default     = "kubenet"
+  validation {
+    condition = (
+      var.network_plugin == "kubenet" ||
+      var.network_plugin == "azure" ||
+      var.network_plugin == "azureoverlay"
+    )
+    error_message = "Must be one of: kubenet, azure, or azureoverlay"
+  }
+}
+
+variable "network_pod_cidr" {
+  type        = string
+  description = "For Kubenet and Azure CNI Overlay. The address range CIDR to use for pod IP addresses. Default is 10.244.0.0/16."
+  default     = null
+}
+
+variable "network_service_cidr" {
+  type        = string
+  description = "The address range CIDR to use for K8s service addresses. Default is 10.0.0.0/16."
+  default     = null
+}
+
+variable "network_dns_service_ip" {
+  type        = string
+  description = "IP address within network_service_cidr that will be used by cluster service discovery (kube-dns). Default is 10.0.0.10"
+  default     = null
+}
+
+variable "network_docker_bridge_cidr" {
+  type        = string
+  description = "Address range CIDRs for Docker bridge addresses on nodes (deprecated). Default is 172.17.0.1/16."
+  default     = null
+}
+
+variable "outbound_type" {
+  type        = string
+  description = "The outbound (egress) routing method which should be used for this Kubernetes Cluster. Possible values are loadBalancer, userDefinedRouting, managedNATGateway and userAssignedNATGateway. For Azure Firewall, choose userDefinedRouting. Default is loadBalancer."
+  default     = "loadBalancer"
+}
+
 # ---------------------------------------- RBAC -----------------------------------------
 
 variable "azure_rbac_admin_group_object_ids" {
@@ -48,7 +119,7 @@ variable "ssh_public_key" {
 variable "system_node_pool_vm_size" {
   type        = string
   description = "VM size of the K8s system nodes (aka control plane)"
-  default     = "Standard_D2_v2"
+  default     = "Standard_D2_v4"
 }
 
 variable "system_node_pool_count" {
@@ -115,17 +186,23 @@ variable "maintenance_not_allowed_windows" {
 }
 
 
-# -------------------------------- Misc Optional Settings -------------------------------
+# ---------------------------------- Optional Settings ----------------------------------
 
-variable "network_plugin" {
+variable "app_gateway_id" {
   type        = string
-  description = "Which K8s network plugin to use: kubenet or azure. Cillium is coming soon."
-  default     = "kubenet"
+  description = "To enable AGIC, provide the Object ID of a pre-created Application Gateway. app_gateway_subnet_id is also required."
+  default     = null
+}
+
+variable "app_gateway_subnet_id" {
+  type        = string
+  description = "To enable AGIC, provide the Object ID of the Application Gateway's Subnet. app_gateway_id is also required."
+  default     = null
 }
 
 variable "sku_tier" {
   type        = string
-  description = "AKS SKU: Free, Paid, or Standard. Free = no SLAs."
+  description = "AKS SKU: Free or Standard. Free = no SLAs."
   default     = "Standard"
 }
 
@@ -146,4 +223,10 @@ variable "dns_prefix_override" {
     )
     error_message = "Must be between 1 and 54 characters long, contain only alphanumerics and hyphens, and start and end with alphanumeric."
   }
+}
+
+variable "cluster_nodes_subnet_name_override" {
+  type        = string
+  description = "(Optional) Override the default subnet + route table name for the AKS cluster's nodes. Uses nodes-<cluster-name> by default."
+  default     = ""
 }
