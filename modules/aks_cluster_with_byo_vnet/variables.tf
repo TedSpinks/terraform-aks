@@ -93,6 +93,34 @@ variable "outbound_type" {
   default     = "loadBalancer"
 }
 
+variable "azure_firewall_private_ip" {
+  description = "Private IP of the Azure Firewall. Use in conjunction with azure_firewall_pip_address and outbound_type."
+  default     = null
+}
+
+variable "azure_firewall_pip_address" {
+  description = "Public IP address of the Azure Firewall. Use in conjunction with azure_firewall_private_ip and outbound_type."
+  default     = null
+}
+
+variable "app_gateway_enable" {
+  type        = bool
+  description = "Enable AGIC. If true, then app_gateway_id and app_gateway_subnet_id are also required."
+  default     = false
+}
+
+variable "app_gateway_id" {
+  type        = string
+  description = "To enable AGIC, provide the Object ID of a pre-created Application Gateway. app_gateway_enable and app_gateway_subnet_id are also required."
+  default     = null
+}
+
+variable "app_gateway_subnet_id" {
+  type        = string
+  description = "To enable AGIC, provide the Object ID of the Application Gateway's Subnet. app_gateway_enable and app_gateway_id are also required."
+  default     = null
+}
+
 # ---------------------------------------- RBAC -----------------------------------------
 
 variable "azure_rbac_admin_group_object_ids" {
@@ -187,18 +215,6 @@ variable "maintenance_not_allowed_windows" {
 
 
 # ---------------------------------- Optional Settings ----------------------------------
-
-variable "app_gateway_id" {
-  type        = string
-  description = "To enable AGIC, provide the Object ID of a pre-created Application Gateway. app_gateway_subnet_id is also required."
-  default     = null
-}
-
-variable "app_gateway_subnet_id" {
-  type        = string
-  description = "To enable AGIC, provide the Object ID of the Application Gateway's Subnet. app_gateway_id is also required."
-  default     = null
-}
 
 variable "sku_tier" {
   type        = string

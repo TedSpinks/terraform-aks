@@ -69,23 +69,35 @@ module "aks_example_2" {
   location                          = var.location
   ssh_public_key                    = var.ssh_public_key
   user_node_pool_count              = 1
-  network_plugin                    = "azure"
-  vnet_name                         = module.vnet_aks_clusters.vnet_name
-  vnet_id                           = module.vnet_aks_clusters.vnet_id
-  vnet_resource_group_name          = module.vnet_aks_clusters.vnet_resource_group_name
-  vnet_resource_group_id            = module.vnet_aks_clusters.vnet_resource_group_id
-  app_gateway_id                    = module.agw_for_aks_example_2.app_gateway_id
-  app_gateway_subnet_id             = module.agw_for_aks_example_2.app_gateway_subnet_id
-  aks_nodes_subnet_address_prefixes = ["10.89.1.0/24"]
-  # outbound_type                     = "userDefinedRouting" # For Azure Firewall
   tags                              = var.tags
   sku_tier                          = "Free"
   azure_rbac_admin_group_object_ids = ["5390308c-2651-44e7-b10b-42887107a3c8"]
   # azure_rbac_reader_group_object_ids = ["5390308c-2651-44e7-b10b-42887107a3c8"]
   maintenance_allowed_windows = [{ day = "Tuesday", hours = [9, 10] }, { day = "Thursday", hours = [9, 10] }]
+
+  # Network
+  network_plugin                    = "azure"
+  vnet_name                         = module.vnet_aks_clusters.vnet_name
+  vnet_id                           = module.vnet_aks_clusters.vnet_id
+  vnet_resource_group_name          = module.vnet_aks_clusters.vnet_resource_group_name
+  vnet_resource_group_id            = module.vnet_aks_clusters.vnet_resource_group_id
+  aks_nodes_subnet_address_prefixes = ["10.89.1.0/24"]
+
+  # App Gateway
+  app_gateway_enable    = true
+  app_gateway_id        = module.agw_for_aks_example_2.app_gateway_id
+  app_gateway_subnet_id = module.agw_for_aks_example_2.app_gateway_subnet_id
+
+  # Azure Firewall
+  outbound_type              = "userDefinedRouting"
+  azure_firewall_private_ip  = module.vnet_hub.azure_firewall_private_ip
+  azure_firewall_pip_address = module.vnet_hub.azure_firewall_pip_address
+
   depends_on = [
-    module.agw_for_aks_example_2,
+    module.vnet_hub,
+    module.vnet_aks_clusters,
     azurerm_virtual_network_peering.hub_to_aks,
     azurerm_virtual_network_peering.aks_to_hub,
+    module.agw_for_aks_example_2,
   ]
 }

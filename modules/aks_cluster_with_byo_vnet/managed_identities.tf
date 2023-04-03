@@ -31,7 +31,7 @@ resource "azurerm_role_assignment" "route_table" {
 # When you BYO a shared App Gateway instead of letting AKS create it, we need to add
 # this permission after AKS creates a Managed Identity for talking to the App Gateway.
 resource "azurerm_role_assignment" "app_gateway" {
-  count                = (var.app_gateway_id != null) ? 1 : 0
+  count                = (var.app_gateway_enable != false) ? 1 : 0
   role_definition_name = "Contributor"
   scope                = var.app_gateway_id
   principal_id         = azurerm_kubernetes_cluster.this.ingress_application_gateway[0].ingress_application_gateway_identity[0].object_id
@@ -41,7 +41,7 @@ resource "azurerm_role_assignment" "app_gateway" {
 # When you BYO a shared App Gateway instead of letting AKS create it, we need to add
 # this permission after AKS creates a Managed Identity for talking to the App Gateway.
 resource "azurerm_role_assignment" "agw_resource_group" {
-  count                = (var.app_gateway_id != null) ? 1 : 0
+  count                = (var.app_gateway_enable != false) ? 1 : 0
   role_definition_name = "Reader"
   scope                = var.vnet_resource_group_id
   principal_id         = azurerm_kubernetes_cluster.this.ingress_application_gateway[0].ingress_application_gateway_identity[0].object_id

@@ -27,7 +27,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     dns_service_ip     = var.network_dns_service_ip
     docker_bridge_cidr = var.network_docker_bridge_cidr
     # Egress type. Default is loadBalancer. For Azure Firewall, use userDefinedRouting
-    outbound_type      = var.outbound_type
+    outbound_type = var.outbound_type
   }
 
   # Enable Application Gateway Ingress Controller (AGIC)
@@ -95,6 +95,14 @@ resource "azurerm_kubernetes_cluster" "this" {
     # See https://learn.microsoft.com/en-us/azure/aks/use-system-pools?tabs=azure-cli#system-and-user-node-pools
     only_critical_addons_enabled = true
   }
+
+  depends_on = [
+    azurerm_route_table.cluster_nodes,
+    azurerm_route.aks_egress_fwrn,
+    azurerm_route.aks_egress_fwinternet,
+    azurerm_subnet_route_table_association.cluster_nodes,
+    azurerm_subnet_route_table_association.app_gateway,
+  ]
 }
 
 
