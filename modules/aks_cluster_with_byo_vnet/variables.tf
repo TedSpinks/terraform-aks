@@ -105,13 +105,13 @@ variable "azure_firewall_pip_address" {
 
 variable "app_gateway_enable" {
   type        = bool
-  description = "Enable AGIC. If true, then app_gateway_id and app_gateway_subnet_id are also required."
+  description = "Enable AGIC. If true, then app_gateway_id and app_gateway_subnet_id are also required. Set to false when using Azure CNI Overlay."
   default     = false
 }
 
 variable "app_gateway_id" {
   type        = string
-  description = "To enable AGIC, provide the Object ID of a pre-created Application Gateway. app_gateway_enable and app_gateway_subnet_id are also required."
+  description = "Object ID of a pre-created Application Gateway. app_gateway_enable and app_gateway_subnet_id are also required."
   default     = null
 }
 
@@ -120,6 +120,7 @@ variable "app_gateway_subnet_id" {
   description = "To enable AGIC, provide the Object ID of the Application Gateway's Subnet. app_gateway_enable and app_gateway_id are also required."
   default     = null
 }
+
 
 # ---------------------------------------- RBAC -----------------------------------------
 

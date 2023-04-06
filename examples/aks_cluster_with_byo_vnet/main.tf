@@ -1,5 +1,6 @@
-# To integrate AKS into your existing IP scheme, you'll want to BYO VNet
-# Baseline Architecture for AKS: https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks
+# Example 2: To integrate AKS into your existing IP scheme, you'll want to BYO VNet
+# Follows Microsoft's "Baseline Architecture for AKS"
+# https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks
 
 locals {
   aks_cluster_name = "aks-example-2"

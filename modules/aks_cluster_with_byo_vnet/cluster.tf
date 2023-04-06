@@ -7,8 +7,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   sku_tier            = var.sku_tier
 
   # Control Plane's Managed Identity
-  # Use SystemAssigned id when possible, because AKS will give it all the needed permissions. 
-  # We need UserAssigned id when using Kubenet with BYO VNet/Subnet, so we can pre-create the
+  # Use SystemAssigned id when possible, because AKS will manage its lifecycle. We need
+  # UserAssigned id when using Kubenet with BYO VNet/Subnet, so we can pre-create the
   # role assignment it needs to update its Route Table.
   # https://learn.microsoft.com/en-us/azure/aks/use-managed-identity
   identity {
@@ -31,9 +31,10 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   # Enable Application Gateway Ingress Controller (AGIC)
-  # Set var.enable_app_gateway_dynamic_block to [] if you need to disable AGIC (it's not compatible with Azure CNI Overlay)
+  # To disable AGIC, set local.app_gateway_enable_dynamic_block to []. 
+  # Disable AGIC when using Azure CNI Overlay, as it isn't compatible.
   dynamic "ingress_application_gateway" {
-    for_each = local.enable_app_gateway_dynamic_block
+    for_each = local.app_gateway_enable_dynamic_block
     content {
       gateway_id = var.app_gateway_id
     }

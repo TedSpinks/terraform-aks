@@ -8,7 +8,7 @@ locals {
 
   # Convert a boolean var into an array with either 1 element or none. This array is used to enable or disable a dynamic block 
   # in cluster.tf. 1 element in the array enables the "ingress_application_gateway" dynamic block, 0 elements disables it.
-  enable_app_gateway_dynamic_block = (var.app_gateway_id != null) ? ["enable"] : []
+  app_gateway_enable_dynamic_block = (var.app_gateway_enable) ? ["enable"] : []
 
   # Default resource group name matches the cluster name. If an override was provided, use that instead.
   main_resource_group_name = (var.main_resource_group_name_override != "") ? var.main_resource_group_name_override : var.cluster_name

@@ -22,6 +22,42 @@ variable "tags" {
 }
 
 
+# --------------------------------------- Network ---------------------------------------
+
+variable "network_plugin" {
+  type        = string
+  description = "Which K8s network plugin to use: kubenet, azure, or azureoverlay. Cillium is coming soon."
+  default     = "kubenet"
+  validation {
+    condition = (
+      var.network_plugin == "kubenet" ||
+      var.network_plugin == "azure" ||
+      var.network_plugin == "azureoverlay"
+    )
+    error_message = "Must be one of: kubenet, azure, or azureoverlay"
+  }
+}
+
+variable "app_gateway_enable" {
+  type        = bool
+  description = "Enable AGIC. If true, then either app_gateway_cidr or app_gateway_id is also required. Set to false when using Azure CNI Overlay."
+  default     = true
+}
+
+variable "app_gateway_id" {
+  description = "Object ID of a pre-created Application Gateway that this cluster should use for AGIC."
+  default     = null
+}
+
+variable "app_gateway_cidr" {
+  description = "The subnet CIDR to be used to create an Application Gateway for AGIC. AKS will auto-create along with the default VNet+Subnet. If you want to use BYO VNet, set this to null and use app_gateway_id instead."
+  # Microsoft recommends a /24 subnet for AGIC. The default AKS VNet is 10.224.0.0/12, and its default 
+  # node pool subnet is 10.224.0.0/16, so the next available /24 subnet after 10.224.0.0/16 but still 
+  # within 10.224.0.0/12 is 10.225.0.0/24.
+  default = "10.225.0.0/24"
+}
+
+
 # ---------------------------------------- RBAC -----------------------------------------
 
 variable "azure_rbac_admin_group_object_ids" {
@@ -116,31 +152,6 @@ variable "maintenance_not_allowed_windows" {
 
 
 # ---------------------------------- Optional Settings ----------------------------------
-
-variable "network_plugin" {
-  type        = string
-  description = "Which K8s network plugin to use: kubenet or azure. Cillium is coming soon."
-  default     = "kubenet"
-}
-
-variable "enable_app_gateway" {
-  type        = bool
-  description = "This variable enables (default) or disables AGIC."
-  default     = true
-}
-
-variable "app_gateway_cidr" {
-  description = "The subnet CIDR to be used to create an Application Gateway for AGIC. AKS will auto-create along with the default VNet+Subnet. If you want to use BYO VNet, set this to null and use app_gateway_id instead."
-  # Microsoft recommends a /24 subnet for AGIC. The default AKS VNet is 10.224.0.0/12, and its default 
-  # node pool subnet is 10.224.0.0/16, so the next available /24 subnet after 10.224.0.0/16 but still 
-  # within 10.224.0.0/12 is 10.225.0.0/24.
-  default = "10.225.0.0/24"
-}
-
-variable "app_gateway_id" {
-  description = "Object ID of a pre-created Application Gateway that this cluster should use for AGIC."
-  default     = null
-}
 
 variable "sku_tier" {
   type        = string
