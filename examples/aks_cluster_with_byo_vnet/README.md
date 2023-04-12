@@ -25,7 +25,7 @@ Be sure to provide at least one `azure_rbac_admin_group_object_ids`, so that you
 
 Azure CNI Overlay is not compatible with AGIC, so be sure to set `app_gateway_enable = false`.
 
-Also, to use Azure CNI Overlay, you'll need to enable it as a preview feature in your Azure subscription. The most staight forward way to do this is with your `az` CLI:
+Also, to use Azure CNI Overlay, you'll need to enable it as a preview feature in your Azure subscription. The most straightforward way to do this is with your `az` CLI:
 
 ```
 # Install the preview extension
