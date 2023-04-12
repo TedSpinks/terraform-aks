@@ -1,7 +1,3 @@
-# Example 2: To integrate AKS into your existing IP scheme, you'll want to BYO VNet
-# Follows Microsoft's "Baseline Architecture for AKS"
-# https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks
-
 locals {
   aks_cluster_name = "aks-example-2"
 }
@@ -43,7 +39,7 @@ resource "azurerm_virtual_network_peering" "aks_to_hub" {
 }
 
 # When using Kubenet, create 1 App Gateway per AKS cluster.
-# When using Azure CNI or Azure CNI Overlay, you can have 1 App Gateway for multiple AKS clusters.
+# When using Azure CNI, you can have 1 App Gateway for multiple AKS clusters.
 # Note: since the App Gateway's subnet must be in the same resource group as its VNet,
 # it makes sense to put the App Gateway itself in that resource group, too.
 module "agw_for_aks_example_2" {

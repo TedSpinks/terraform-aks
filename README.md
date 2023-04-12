@@ -6,7 +6,7 @@ Azure Kubernetes Services (AKS) has tons of features and options, including the 
 
 ## Background
 
-Initially, the Terraform examples in this repo were just a library of code snippets that I used for enabling this feature or that feature, as I worked on projects. However, as I started combining features, I discovered that their interaction brought a lot of complexity - often the choice of one feature would introduce new requirements and/or severely limit other choices. The examples in this repo show how to properly combine features, and how to avoid common gotchas.
+Initially, the Terraform examples in this repo were just a library of code snippets that I used for enabling this feature or that feature, as I worked on projects. However, as I started combining features, I realized that their interaction brought a lot of complexity - often the choice of one feature would introduce new requirements and/or severely limit other choices. The examples in this repo show how to properly combine features, and how to avoid common gotchas.
 
 # Major Features Covered
 
