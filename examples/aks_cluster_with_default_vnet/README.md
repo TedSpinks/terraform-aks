@@ -4,7 +4,7 @@
 
 This Terraform example calls a single module for a simple AKS cluster, in which AKS auto-creates the default VNet (10.224.0.0/12) and default subnet (10.224.0.0/16). Is also uses the default pod CIDR (10.244.0.0/16) and service CIDR (10.0.0.0/16). If you tell it to enable the Application Gateway Ingress Controller (AGIC), then AKS also auto-creates an AGIC subnet (10.225.0.0/24).
 
-Because this simple module uses all the default auto-created IP ranges, its usefulness is mostly limited to lab and learning environments, where duplicating these IP ranges won't cause any problems. For professional scenarios where you want to integrate AKS into your existing IP scheme, check out the other, more [extensive example](/examples/aks_cluster_with_byo_vnet/README.md). In which case, being able to `diff` or [meld](https://meld.app/) between the 2 examples might help provide some additional context for understanding the additions of the more extensive example.
+Because this simple module uses all the default auto-created IP ranges, its usefulness is mostly limited to lab and learning environments, where duplicating these IP ranges won't cause any problems. For professional scenarios where you want to integrate AKS into your existing IP scheme, check out the other, more [extensive example](/examples/aks_cluster_with_byo_vnet). In which case, being able to `diff` or [meld](https://meld.app/) between the 2 examples might help provide some additional context for understanding the additions of the more extensive example.
 
 ## Major Features Covered
 
