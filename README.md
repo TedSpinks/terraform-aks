@@ -15,7 +15,7 @@ Initially, the Terraform examples in this repo were just a library of code snipp
 - Azure AD auth + Azure RBAC
 - Cluster Auto-Upgrade
 - Cluster Autoscaler
-- 3 network plugins: Kubenet, Azure CNI, Azure CNI Overlay
+- Choice of 3 network plugins: Kubenet, Azure CNI, Azure CNI Overlay
 - Application Gateway Ingress Controller (AGIC)
 - Azure Firewall for controlling egress traffic
 
