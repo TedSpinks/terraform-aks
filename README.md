@@ -13,6 +13,7 @@ Initially, the Terraform examples in this repo were just a library of code snipp
 - Implement Microsoft's [Baseline Architecture for AKS](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks)
 - BYO VNet + IP range, as opposed to the default AKS-created VNet + IP range
 - Azure AD auth + Azure RBAC
+- Container Insights (monitoring)
 - Cluster Auto-Upgrade
 - Cluster Autoscaler
 - Choice of 3 network plugins: Kubenet, Azure CNI, Azure CNI Overlay

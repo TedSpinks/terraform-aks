@@ -14,6 +14,7 @@ Side note, if you want to get a feel for what additional Terraform code is neede
   - Implement Microsoft's [Baseline Architecture for AKS](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks)
   - Azure Firewall for controlling egress traffic
 - Azure AD auth + Azure RBAC
+- Container Insights (monitoring)
 - Cluster Auto-Upgrade (with maintenance windows)
 - Cluster Autoscaler
 - Choice of 3 network plugins: Kubenet, Azure CNI, Azure CNI Overlay

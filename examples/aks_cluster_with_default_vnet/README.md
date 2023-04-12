@@ -9,6 +9,7 @@ Because this simple module uses all the default auto-created IP ranges, its usef
 ## Major Features Covered
 
 - Azure AD auth + Azure RBAC
+- Container Insights (monitoring)
 - Cluster Auto-Upgrade (with maintenance windows)
 - Cluster Autoscaler
 - Choice of 3 network plugins: Kubenet, Azure CNI, Azure CNI Overlay
