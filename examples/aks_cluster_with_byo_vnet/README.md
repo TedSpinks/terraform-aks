@@ -2,11 +2,11 @@
 
 ## An AKS Example For BYO VNet / IP Scheme
 
-This Terraform example illustrates how to integrate AKS into your existing IP scheme. It calls modules that create a VNet for AKS clusters (1 subnet per AKS cluster), but you could easily swap this out for your own VNet module, or call the `azurerm_virtual_network` data provider to use an existing VNet.
+This Terraform example illustrates how to integrate AKS into your existing IP scheme. It calls modules that create VNets for shared resources (Firewall, Bastion) and for AKS clusters (1 subnet per AKS cluster), but you could easily swap these out for your own modules, and/or call the `azurerm_virtual_network` data provider to use existing VNets.
 
-This example includes the integration of an AGIC subnet and a shared "hub" VNet for Azure Firewall and Azure Bastion services. This example mirrors Microsoft's [Baseline Architecture for AKS](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks).
+This example also mirrors Microsoft's [Baseline Architecture for AKS](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks), which includes the integration of an AGIC subnet and a shared "hub" VNet for Azure Firewall and Azure Bastion services.
 
-Side note, if you want to get a feel for what extra code is needed for BYO VNet beyond simply using AKS' default auto-created VNet you can `diff` or [meld](https://meld.app/) between this example and the [default VNet example](/examples/aks_cluster_with_default_vnet).
+Side note, if you want to get a feel for what additional Terraform code is needed when moving from AKS' default auto-created VNet to a BYO VNet scenario, you can `diff` or [meld](https://meld.app/) between this example and the [default VNet example](/examples/aks_cluster_with_default_vnet).
 
 ## Major Features Covered
 
@@ -76,4 +76,4 @@ SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 terraform import azurerm_resource_provider_registration.azure_cni_overlay /subscriptions/$SUBSCRIPTION_ID/providers/Microsoft.ContainerService
 ```
 
-So, is this manual importing of state an improvement over the `az` CLI commands? I guess the answer depends on how you're deploying your Terraform. For me, having to manually import the state presents more challenges than running the `az` command. For more background/info on this issue, you can read up on it [here](https://discuss.hashicorp.com/t/how-to-enable-azure-preview-feature/43977) and [here](https://stackoverflow.com/questions/74659956/to-enable-preview-feature-of-azure-resource-provider).
+So, is this manual importing of state an improvement over the `az` CLI commands? I guess the answer depends on how you're deploying your Terraform. For me, having to manually import the state presents more challenges than running the `az` commands. For more background/info on this issue, you can read up on it [here](https://discuss.hashicorp.com/t/how-to-enable-azure-preview-feature/43977) and [here](https://stackoverflow.com/questions/74659956/to-enable-preview-feature-of-azure-resource-provider).
