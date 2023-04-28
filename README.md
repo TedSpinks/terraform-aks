@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Azure Kubernetes Services (AKS) has tons of features and options, including the ability to leverage other Azure services such as Firewall and Application Gateway. The purpose of this repository is to exemplify how to properly combine common AKS features, as well as to document incompatible features through variable descriptions and code comments.
+Azure Kubernetes Services (AKS) has tons of features and options, including the ability to leverage other Azure services such as Firewall and Application Gateway. The purpose of this repository is to exemplify how to combine common AKS features, as well as to document incompatible features through variable descriptions and code comments.
 
 ## Background
 
