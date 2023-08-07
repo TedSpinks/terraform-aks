@@ -22,59 +22,10 @@ Side note, if you want to get a feel for what additional Terraform code is neede
 
 Be sure to provide at least one `azure_rbac_admin_group_object_ids`, so that you can access your cluster after it's created.
 
-## Azure CNI Overlay - Caveats
+## How to use AGIC with each CNI
 
-Azure CNI Overlay is not compatible with AGIC, so be sure to set `app_gateway_enable = false`.
+- Azure CNI - You can share 1 App Gateway across multiple AKS clusters.
+- Azure CNI Overlay - not compatible with AGIC, so be sure to set `app_gateway_enable = false`.
+- Kubenet - When using Kubenet, create a separate App Gateway per AKS cluster. This is needed because Kubenet manages its own routes to direct traffic to each pod through the specific nodes on which it lives. In order for AGIC to communicate with pods, you'll need to assign the Kubenet-managed Route Table to the App Gateway subnet. Because you can only assign 1 Route Table per subnet, this effectively limits the AGIC to 1 Kubenet AKS cluster.
 
-Also, to use Azure CNI Overlay, you'll need to enable it as a preview feature in your Azure subscription. The most straightforward way to do this is with your `az` CLI:
-
-```
-# Install the preview extension
-az extension add --name aks-preview
-
-# Update to the latest version
-az extension update --name aks-preview
-
-# Add the CNI Overlay feature
-az feature register --namespace "Microsoft.ContainerService" --name "AzureOverlayPreview"
-
-# Wait for the status to be Registered
-az feature show --namespace "Microsoft.ContainerService" --name "AzureOverlayPreview"
-
-# Refresh the registration of the Microsoft.ContainerService resource
-az provider register --namespace Microsoft.ContainerService
-```
-
-Any fan of Terraform will of course prefer to enable this within their Terraform code instead of the `az` CLI. Unfortunately, doing so doesn't work quite as well as one would hope, so your mileage may vary. To try it out, you can add the code below to your **providers.tf**. 
-
-```
-provider "azurerm" {
-  features {}
-
-  # Required for enabling features via azurerm_resource_provider_registration
-  skip_provider_registration = true
-}
-
-# For Azure CNI Overlay, because it is in Preview
-# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_provider_registration#example-usage-registering-a-preview-feature
-resource "azurerm_resource_provider_registration" "azure_cni_overlay" {
-  name = "Microsoft.ContainerService"
-  feature {
-    name       = "AzureOverlayPreview"
-    registered = true
-  }
-}
-```
-
-However, your first `terraform apply` will result in the following error:
-> Error: A resource with the ID. “/subscriptions/xxxx-xxxx/providers/Microsoft.Network” already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for “azurerm_resource_provider_registration” for more information.
-
-To resolve this error, you'll need to manually import the registration into your state, like this:
-
-```
-SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-
-terraform import azurerm_resource_provider_registration.azure_cni_overlay /subscriptions/$SUBSCRIPTION_ID/providers/Microsoft.ContainerService
-```
-
-So, is this manual importing of state an improvement over the `az` CLI commands? I guess the answer depends on how you're deploying your Terraform. For me, having to manually import the state presents more challenges than running the `az` commands. For more background/info on this issue, you can read up on it [here](https://discuss.hashicorp.com/t/how-to-enable-azure-preview-feature/43977) and [here](https://stackoverflow.com/questions/74659956/to-enable-preview-feature-of-azure-resource-provider).
+Also, since the App Gateway's subnet must be in the same resource group as its VNet, it makes sense to put the App Gateway itself in that resource group, too.
