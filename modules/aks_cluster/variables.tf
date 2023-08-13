@@ -58,6 +58,15 @@ variable "app_gateway_cidr" {
 }
 
 
+# ------------------------------- Private K8s API Server --------------------------------
+
+variable "private_cluster_enabled" {
+  type        = bool
+  description = "Only expose the K8s API server as a Private IP on the nodes' subnet"
+  default     = false
+}
+
+
 # ---------------------------------------- RBAC -----------------------------------------
 
 variable "azure_rbac_admin_group_object_ids" {

@@ -122,6 +122,27 @@ variable "app_gateway_subnet_id" {
 }
 
 
+# ------------------------------- Private K8s API Server --------------------------------
+
+variable "private_cluster_enabled" {
+  type        = bool
+  description = "Only expose the K8s API server as a Private IP on the nodes' subnet"
+  default     = false
+}
+
+variable "private_dns_zone_id" {
+  type        = string
+  description = "DNS zone for the K8s API server. Enter the ID of a private DNS zone to delegate, \"System\" (default) for AKS to create+manage the private DNS zone, or \"None\" to BYO DNS server."
+  default     = "System"
+}
+
+variable "private_cluster_public_fqdn_enabled" {
+  type        = bool
+  description = "Specifies whether a Public FQDN for this Private Cluster should be added"
+  default     = false
+}
+
+
 # ---------------------------------------- RBAC -----------------------------------------
 
 variable "azure_rbac_admin_group_object_ids" {

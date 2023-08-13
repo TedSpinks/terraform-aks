@@ -5,6 +5,7 @@ module "azure_aks_default_vnet_example" {
   ssh_public_key                    = var.ssh_public_key
   user_node_pool_count              = 1
   network_plugin                    = "kubenet"
+  # private_cluster_enabled           = true
   # app_gateway_enable                = false # false when network_plugin = azureoverlay
   tags                              = var.tags
   sku_tier                          = "Free"

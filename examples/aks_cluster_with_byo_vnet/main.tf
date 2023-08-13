@@ -68,6 +68,7 @@ module "aks_example_2" {
   user_node_pool_count              = 1
   tags                              = var.tags
   sku_tier                          = "Free"
+  # private_cluster_enabled           = true
   azure_rbac_admin_group_object_ids = ["5390308c-2651-44e7-b10b-42887107a3c8"]
   # azure_rbac_reader_group_object_ids = ["5390308c-2651-44e7-b10b-42887107a3c8"]
   maintenance_allowed_windows = [{ day = "Tuesday", hours = [9, 10] }, { day = "Thursday", hours = [9, 10] }]

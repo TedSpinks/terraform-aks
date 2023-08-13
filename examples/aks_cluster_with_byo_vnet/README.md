@@ -18,6 +18,7 @@ Side note, if you want to get a feel for what additional Terraform code is neede
 - Cluster Auto-Upgrade (with maintenance windows)
 - Cluster Autoscaler
 - Choice of 3 network plugins: Kubenet, Azure CNI, Azure CNI Overlay
+- Private K8s API Server
 - Application Gateway Ingress Controller (AGIC)
 
 Be sure to provide at least one `azure_rbac_admin_group_object_ids`, so that you can access your cluster after it's created.

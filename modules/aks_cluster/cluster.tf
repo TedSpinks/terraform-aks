@@ -1,10 +1,11 @@
 resource "azurerm_kubernetes_cluster" "this" {
-  location            = var.location
-  name                = var.cluster_name
-  resource_group_name = azurerm_resource_group.this.name
-  dns_prefix          = local.dns_prefix
-  tags                = var.tags
-  sku_tier            = var.sku_tier
+  location                = var.location
+  name                    = var.cluster_name
+  resource_group_name     = azurerm_resource_group.this.name
+  dns_prefix              = local.dns_prefix
+  tags                    = var.tags
+  sku_tier                = var.sku_tier
+  private_cluster_enabled = var.private_cluster_enabled
 
   # Control Plane's Managed Identity
   # Use SystemAssigned id when possible, because AKS will manage its lifecycle. We need

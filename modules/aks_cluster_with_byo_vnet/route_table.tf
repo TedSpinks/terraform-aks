@@ -18,7 +18,7 @@ resource "azurerm_route_table" "cluster_nodes" {
 # Add Azure Firewall routes
 # Reference: https://learn.microsoft.com/en-us/azure/aks/limit-egress-traffic#create-a-udr-with-a-hop-to-azure-firewall
 resource "azurerm_route" "aks_egress_fwrn" {
-  count                  = local.route_table_required ? 1 : 0
+  count                  = (var.outbound_type == "userDefinedRouting") ? 1 : 0
   name                   = "aks-egress-fwrn"
   resource_group_name    = var.vnet_resource_group_name
   route_table_name       = azurerm_route_table.cluster_nodes[0].name
@@ -27,7 +27,7 @@ resource "azurerm_route" "aks_egress_fwrn" {
   next_hop_in_ip_address = var.azure_firewall_private_ip
 }
 resource "azurerm_route" "aks_egress_fwinternet" {
-  count               = local.route_table_required ? 1 : 0
+  count               = (var.outbound_type == "userDefinedRouting") ? 1 : 0
   name                = "aks-egress-fwinternet"
   resource_group_name = var.vnet_resource_group_name
   route_table_name    = azurerm_route_table.cluster_nodes[0].name
